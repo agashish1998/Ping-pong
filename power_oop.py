@@ -9,12 +9,9 @@ border_thickness = 5
 radius = 35
 life_time = 700
 cycle_time = 2100
+paddle_margin = 100
 #------------------------------------------------------
 
-def random_position(w, h):
-	x = int(random.random()*w)
-	y = int(random.random()*h)
-	return x, y	
 
 def random_time():
 	t = int(random.random()*cycle_time/2)
@@ -28,10 +25,14 @@ class power:
 	life_span = 700
 	birth_time = random_time()
 	new = True
+	
+	
 	def __init__(self, w, h):
-		self.x, self.y = random_position(w, h)
+		self.x = 0
+		self.y = 0
 		self.w = w
 		self.h = h
+		self.random_position()
 		
 	def show(self, disp):
 		if not self.present:
@@ -50,11 +51,12 @@ class power:
 			return False
 	
 	def reset(self):
-		self.x, self.y = random_position(self.w, self.h)
+		self.random_position()
 		self.birth_time = random_time()
 		self.new = True
 		self.present = False
 #		print("making new power with bt = ", self.birth_time)
+
 		
 	def update(self, t):
 		if t >= self.birth_time and t <= self.birth_time + self.life_span:
@@ -65,8 +67,15 @@ class power:
 			self.present = False		
 	
 	
-	
-	
+	def random_position(self):
+		x = int(random.random()*(self.w - 2*paddle_margin))
+		x += paddle_margin
+		y = int(random.random()*(self.h - 2*self.rad))
+		y += self.rad
+		self.x = x
+		self.y = y	
+
+		
 	
 	
 	

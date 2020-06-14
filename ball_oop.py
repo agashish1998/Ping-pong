@@ -98,15 +98,13 @@ class ball:
 			
 	def reset(self, w, h, pad):
 #		print("resetting the ball")
-		if pad.player == 1:
+		if pad.player == player1_id:
 			self.y = pad.y + pad.length/2
 			self.x = pad.x + pad.thickness + self.rad
-		if pad.player == 2:
+		if pad.player == player2_id:
 			self.y = pad.y + pad.length/2
 			self.x = pad.x - self.rad
 					
-		self.x = w/2
-		self.y = h/2
 		self.new_ball = True
 		self.speed = min_speed
 		self.new_velocity()

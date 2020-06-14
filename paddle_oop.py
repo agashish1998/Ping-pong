@@ -112,13 +112,7 @@ class paddle:
 				if event.type == pygame.KEYUP:
 					if event.key == pygame.K_w or event.key == pygame.K_s:
 						self.vy = 0
-						
-			else:
-			#input by AI
-#				self.AI_input(ball)
-				pass				
-				
-				
+
 		if self.player == player2_id:
 			if self.input_method == human_id:
 				if  event.type == pygame.KEYDOWN:
@@ -133,27 +127,21 @@ class paddle:
 				if event.type == pygame.KEYUP:
 					if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
 						self.vy = 0
-			else:
-				#input by AI 
-#				self.AI_input(ball)
-				pass
+						
 		
-	
-	
-	
-#	def AI_input(self, ball):
-#		l = self.length
-#		if self.ball_stick:	
-#			ball.new_ball = False
-#			self.ball_stick = False
-#		if self.y >= ball.y:
-#			self.vy = -1
-#		elif self.y + l <= ball.y:
-#			self.vy = 1
-#		else:
-#			self.vy = 0
-#			
-#			
+	def AI_input(self, ball):
+		l = self.length
+		if self.ball_stick:	
+			ball.new_ball = False
+			self.ball_stick = False
+		if self.y >= ball.y:
+			self.vy = -1
+		elif self.y + l <= ball.y:
+			self.vy = 1
+		else:
+			self.vy = 0
+			
+			
 	
 	
 	

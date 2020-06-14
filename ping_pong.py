@@ -18,7 +18,7 @@ cycle_time = 2100
 human_id = "human"
 ai_id = "AI"
 #----------------------------------------------------
-player1_type = ai_id
+player1_type = human_id
 player2_type = ai_id 
 #----------------------------------------------------
 
@@ -60,9 +60,7 @@ class game:
 	
 		if self.paused:
 			return
-#		self.time += 1
-#		self.time %= cycle_time
-		
+			
 		if self.ball.hits_wall():
 			self.sound.play()
 		
@@ -85,8 +83,7 @@ class game:
 				self.sound.play()
 				self.ball.hitter = player2_id
 			
-			self.if_scored()    #checks if a goal is made
-			
+			self.if_scored()    #checks if a goal is made			
 			self.ball.move()
 			self.time += 1
 			self.time %= cycle_time
@@ -99,9 +96,10 @@ class game:
 		
 	def input_handle(self):
 		if self.player1.input_method == ai_id:
-			self.AI_input(self.player1.player)
+			self.player1.AI_input(self.ball)
 		if self.player2.input_method == ai_id:
-			self.AI_input(self.player2.player)	
+			self.player2.AI_input(self.ball)
+				
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				self.running = False
@@ -115,9 +113,7 @@ class game:
 			
 			if self.player1.input_method == human_id:
 				self.player1.input_handle(event, self.ball)
-#				self.AI_input(self.player1.player)
-#			else:	
-#				self.player1.input_handle(event, self.ball)
+
 			if self.player2.input_method == human_id:
 				self.player2.input_handle(event, self.ball)
 
@@ -166,34 +162,6 @@ class game:
 			self.player2.length = int(self.power.frac*self.player2.length)
 		if self.ball.hitter == player2_id:
 			self.player1.length = int(self.power.frac*self.player1.length)
-	
-	
-	def AI_input(self, player_id):
-	
-		if self.player1.player == player_id:
-			l = self.player1.length
-			if self.player1.ball_stick:	
-				self.ball.new_ball = False
-				self.player1.ball_stick = False
-			if self.player1.y >= self.ball.y:
-				self.player1.vy = -1
-			elif self.player1.y + l <= self.ball.y:
-				self.player1.vy = 1
-			else:
-				self.player1.vy = 0
-			
-		if self.player1.player == player_id:
-			l = self.player2.length
-			if self.player2.ball_stick:	
-				self.ball.new_ball = False
-				self.player2.ball_stick = False
-			if self.player2.y >= self.ball.y:
-				self.player2.vy = -1
-			elif self.player2.y + l <= self.ball.y:
-				self.player2.vy = 1
-			else:
-				self.player2.vy = 0
-	
 	
 	
 	
