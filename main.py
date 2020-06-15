@@ -1,9 +1,16 @@
 import ping_pong 
-from features import *
+import features as f
 
-g = ping_pong.game(width, height)
+#------------TO be changed manually------------------
+player1_type = f.human_id
+player2_type = f.human_id 
+#----------------------------------------------------
+
+
+g = ping_pong.game(player1_type, player2_type)
+
 while(g.running):
 	g.input_handle()
 	g.show()
 	g.update()
-	g.clock.tick(FPS)
+	g.clock.tick(f.FPS)

@@ -1,44 +1,34 @@
 import random
 import pygame
 import math
-
-#----------------------------------------------------
-bg_colour = (255, 255, 0)
-border_colour = (255, 153, 51)
-border_thickness = 5
-radius = 35
-life_time = 700
-cycle_time = 2100
-paddle_margin = 100
-#------------------------------------------------------
+import features as f
 
 
 def random_time():
-	t = int(random.random()*cycle_time/2)
+	t = int(random.random()*f.cycle_time/2)
 	return t
 
+power_type = f.shrinker
+
 class power:
-	colour = bg_colour
-	rad = radius
+	rad = power_type['rad']
 	frac = 0.8
 	present = False
-	life_span = 700
+	life_span = f.life_span
 	birth_time = random_time()
 	new = True
 	
 	
-	def __init__(self, w, h):
+	def __init__(self):
 		self.x = 0
 		self.y = 0
-		self.w = w
-		self.h = h
 		self.random_position()
+		self.img = pygame.image.load(power_type['img'])
 		
 	def show(self, disp):
 		if not self.present:
 			return
-		pygame.draw.circle(disp, self.colour, (self.x, self.y), self.rad)
-		pygame.draw.circle(disp, border_colour, (self.x, self.y), self.rad, border_thickness)
+		disp.blit(self.img, (self.x-self.rad, self.y-self.rad))
 		
 	def hits_ball(self, ball):
 		if self.present and self.new:
@@ -55,7 +45,6 @@ class power:
 		self.birth_time = random_time()
 		self.new = True
 		self.present = False
-#		print("making new power with bt = ", self.birth_time)
 
 		
 	def update(self, t):
@@ -68,14 +57,16 @@ class power:
 	
 	
 	def random_position(self):
-		x = int(random.random()*(self.w - 2*paddle_margin))
-		x += paddle_margin
-		y = int(random.random()*(self.h - 2*self.rad))
+		x = int(random.random()*(f.width - 4*f.paddle_margin))
+		x += 2*f.paddle_margin
+		y = int(random.random()*(f.height - 2*self.rad))
 		y += self.rad
 		self.x = x
 		self.y = y	
 
-		
+	
+	def power_effect(self, pad):
+		pad.length *= self.frac
 	
 	
 	
