@@ -1,6 +1,7 @@
 import paddle_oop as pad
 import ball_oop as ball
 import power_oop as power
+import menu as menu
 import pygame
 import features as f
 
@@ -18,6 +19,7 @@ class game:
 		self.player1 = pad.paddle(f.player1_id, played_by=p1_type)
 		self.player2 = pad.paddle(f.player2_id, played_by=p2_type)
 		self.ball = ball.ball()
+		self.menu = menu.menu()
 		self.power = power.power()
 		pygame.init()
 		self.display = pygame.display.set_mode((self.width, self.height))
@@ -36,6 +38,7 @@ class game:
 		self.ball.show(self.display)
 		self.show_score()
 		self.power.show(self.display)
+		self.menu.show(self.display)
 		pygame.display.update()
 		
 		
@@ -78,32 +81,40 @@ class game:
 		
 		
 	def input_handle(self):
+	
 		if self.player1.input_method == f.ai_id:
 			self.player1.AI_input(self.ball)
 		if self.player2.input_method == f.ai_id:
 			self.player2.AI_input(self.ball)
 				
 		for event in pygame.event.get():
+#			print(event)
 			if event.type == pygame.QUIT:
 				self.running = False
 			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_SPACE:
+				if event.key == pygame.K_SPACE or event.key == pygame.K_ESCAPE:
 					self.paused = not self.paused
-					
-			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_ESCAPE:
-					self.running = False
-			
-			if self.player1.input_method == f.human_id:
-				self.player1.input_handle(event, self.ball)
+					self.menu.visible = not self.menu.visible
+			if self.paused:
+				if event.type==pygame.KEYDOWN and event.key == pygame.K_RETURN:
+					self.change_setup()
+				else:
+					self.menu.input_handler(event)
+			else:
+#				if event.type == pygame.KEYDOWN:
+#					if event.key == pygame.K_ESCAPE:
+#						self.paused = not self.paused
+#						self.menu.visible = not self.menu.visible
+#				
+				if self.player1.input_method == f.human_id:
+					self.player1.input_handle(event, self.ball)
 
-			if self.player2.input_method == f.human_id:
-				self.player2.input_handle(event, self.ball)
+				if self.player2.input_method == f.human_id:
+					self.player2.input_handle(event, self.ball)
 
 		
 	def show_bg(self):
 
-		self.display.fill(self.bg)
 		self.display.fill(f.bg_pattern_colour)
 		w = self.border_width
 		big_rect = (w, w, self.width-2*w, self.height-2*w)
@@ -150,10 +161,26 @@ class game:
 			self.power.power_effect(self.player1)
 	
 	
-	
-	
-	
-	
+	def change_setup(self):
+		for cell in self.menu.cells:
+			if cell.selected:
+				s = cell.text['opt'][cell.text_num]
+				if s == 'Resume':
+					self.paused = not self.paused
+					self.menu.visible = not self.menu.visible
+				elif s == 'exit':
+					self.running = False
+				
+				elif s == f.human_id:
+					if cell.id == 0:
+						self.player1.input_method = f.human_id
+					elif cell.id == 1:
+						self.player2.input_method = f.human_id
+				elif s == f.ai_id:
+					if cell.id == 0:
+						self.player1.input_method = f.ai_id
+					elif cell.id == 1:
+						self.player2.input_method = f.ai_id
 	
 	
 	
