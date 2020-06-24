@@ -1,15 +1,19 @@
 import pygame
 import features as f
 
+p = f.paddles
 
 class paddle:
 	vy = 0 #direction of velocity
-	length = f.paddle_length
+#	length = f.paddle_length
 	speed = f.paddle_speed
-	thickness = f.paddle_thickness
+#	thickness = f.paddle_thickness
 	score = 0
 	ball_stick = False
-	
+	ind = 0
+	length = p[ind]['len']
+	thickness = p[ind]['thick']
+		
 	def __init__(self, n, played_by=f.human_id,player_name = "Player"):
 		self.player = n
 		self.y = f.height/2 - self.length/2
@@ -25,6 +29,12 @@ class paddle:
 			self.colour = f.player2_colour
 		self.name = player_name
 		
+		img = p[self.ind]['img']
+		if img == 'no_img':
+			self.img = img
+		else:
+			self.img = pygame.image.load(img)
+		
 	def move(self):
 		if(self.vy == 0):
 			self.speed = f.paddle_speed
@@ -38,7 +48,12 @@ class paddle:
 			self.y = f.height - self.length
 	
 	def show(self, disp):
-		pygame.draw.rect(disp, self.colour, (self.x, self.y, self.thickness, self.length), f.paddle_border)
+	
+			
+		if self.img == 'no_img':	
+			pygame.draw.rect(disp, self.colour, (self.x, self.y, self.thickness, self.length), f.paddle_border)
+		else:
+			disp.blit(self.img, (self.x, self.y))
 
 	def stick_ball(self, ball):
 		if self.player == f.player1_id:
@@ -137,7 +152,17 @@ class paddle:
 				self.vy = 0
 			
 			
-	
+	def change_theme(self, n):
+		l = len(p)
+		self.ind = (self.ind + n +l)%l
+		
+		self.length = p[self.ind]['len']
+		self.thickness = p[self.ind]['thick']	
+		img = p[self.ind]['img']
+		if img == 'no_img':
+			self.img = img
+		else:
+			self.img = pygame.image.load(img)
 	
 	
 	

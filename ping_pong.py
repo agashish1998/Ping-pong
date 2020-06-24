@@ -5,6 +5,7 @@ import menu as menu
 import pygame
 import features as f
 
+pause = f.pause
 
 class game:
 	bg = f.bg_colour
@@ -30,7 +31,8 @@ class game:
 		self.sound = pygame.mixer.Sound('resources/tak.wav')
 		self.score_sound = pygame.mixer.Sound('resources/coin.wav')
 		self.power_sound = pygame.mixer.Sound('resources/power_up.wav')
-	
+		self.pause_img = pygame.image.load(pause['img'])
+		
 	def show(self):
 		self.show_bg()
 		self.player1.show(self.display)
@@ -38,6 +40,9 @@ class game:
 		self.ball.show(self.display)
 		self.show_score()
 		self.power.show(self.display)
+		if self.paused:
+			self.show_paused()
+#			self.display.blit(self.pause_img, (self.width/2-64, self.height/2-64))
 		self.menu.show(self.display)
 		pygame.display.update()
 		
@@ -92,14 +97,21 @@ class game:
 			if event.type == pygame.QUIT:
 				self.running = False
 			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_SPACE or event.key == pygame.K_ESCAPE:
-					self.paused = not self.paused
+				if event.key == pygame.K_SPACE:
+					if not self.menu.visible:
+						self.paused = not self.paused
+#					self.menu.visible = not self.menu.visible
+				elif event.key == pygame.K_ESCAPE:
+#					self.paused = not self.paused
+					if not self.paused:
+						self.paused = True
 					self.menu.visible = not self.menu.visible
 			if self.paused:
 				if event.type==pygame.KEYDOWN and event.key == pygame.K_RETURN:
 					self.change_setup()
 				else:
 					self.menu.input_handler(event)
+					self.slider_input(event)
 			else:
 #				if event.type == pygame.KEYDOWN:
 #					if event.key == pygame.K_ESCAPE:
@@ -171,21 +183,78 @@ class game:
 				elif s == 'exit':
 					self.running = False
 				
-				elif s == f.human_id:
-					if cell.id == 0:
-						self.player1.input_method = f.human_id
-					elif cell.id == 1:
-						self.player2.input_method = f.human_id
-				elif s == f.ai_id:
-					if cell.id == 0:
-						self.player1.input_method = f.ai_id
-					elif cell.id == 1:
-						self.player2.input_method = f.ai_id
+#				elif s == f.human_id:
+#					if cell.id == 0:
+#						self.player1.input_method = f.human_id
+#					elif cell.id == 1:
+#						self.player2.input_method = f.human_id
+#				elif s == f.ai_id:
+#					if cell.id == 0:
+#						self.player1.input_method = f.ai_id
+#					elif cell.id == 1:
+#						self.player2.input_method = f.ai_id
+#	
+	def slider_input(self, e):
+		for cell in self.menu.cells:
+			if cell.selected:
+				n = 0
+				s = cell.text['top']
+				if e.type == pygame.KEYDOWN and e.key == pygame.K_LEFT:
+					n = -1
+				elif e.type == pygame.KEYDOWN and e.key == pygame.K_RIGHT:
+					n = 1
+				
+				if s == 'Ball':
+					self.ball.change_theme(n)
+				elif s == 'Paddle':
+					self.player1.change_theme(n)
+					self.player2.change_theme(n)
+					
+				elif s == 'Player1':
+#					if cell.id == 0:
+#						self.player1.input_method = f.human_id
+#					elif cell.id == 1:
+#						self.player2.input_method = f.human_id
+					if n != 0:
+						if self.player1.input_method == f.human_id:
+							self.player1.input_method = f.ai_id
+						else:
+							self.player1.input_method = f.human_id
+							
+				elif s == 'Player2':
+#					if cell.id == 0:
+#						self.player1.input_method = f.ai_id
+#					elif cell.id == 1:
+#						self.player2.input_method = f.ai_id
+					if n != 0:
+						if self.player2.input_method == f.human_id:
+							self.player2.input_method = f.ai_id
+						else:
+							self.player2.input_method = f.human_id
+							
 	
 	
-	
-	
-	
-	
-	
+	def show_paused(self):
+		self.display.blit(self.pause_img, (self.width/2-pause['rad'], self.height/2-pause['rad']))		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		

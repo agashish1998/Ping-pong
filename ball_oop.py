@@ -8,21 +8,25 @@ def interpolate(x_max, x_min, x1, x2, x):
 	return (x_max - x_min)*(x-x2)/(x1-x2) + x_min
 	
 #--------------------------------------------------------------------
-ball_type = f.tennis_ball
+b = f.balls
 
 #--------------------------------------------------------------------
 
 class ball:
 	speed = f.min_ball_speed 
-	rad = ball_type['rad']
+#	rad = ball_type['rad']
 	new_ball = False
 	hitter = f.no_player_id
+	ind = 0
 	
 	def __init__(self):
 		self.x = f.width/2
 		self.y = f.height/2
 		self.new_velocity()
-		self.img = pygame.image.load(ball_type['img'])
+		self.rad = b[self.ind]['rad']
+		self.img = pygame.image.load(b[self.ind]['img'])
+		
+#		self.img = pygame.image.load(ball_type['img'])
 #		self.img.convert_alpha()		
 							
 	def show(self, disp):
@@ -123,8 +127,12 @@ class ball:
 		return False
 		
 		
-		
-		
+	def change_theme(self, n):
+		l = len(b)
+		self.ind = (self.ind + n + l)%l
+		self.rad = b[self.ind]['rad']
+		self.img = pygame.image.load(b[self.ind]['img'])
+				
 		
 		
 		
